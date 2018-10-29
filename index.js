@@ -22,9 +22,9 @@ server.use(
 
 ////////////+++ProjectModel Routes++++/////////////////////////////
 
-// server.get('/', (req, res) => {
-//     res.send("Heyo");
-//   });
+server.get('/', (req, res) => {
+    res.send("It's note time, sonny");
+  });
 
 server.post('/notes', (req, res) => {
     const {name, description} = req.body;
