@@ -22,9 +22,9 @@ server.use(
 
 ////////////+++ProjectModel Routes++++/////////////////////////////
 
-server.get('/', (req, res) => {
-    res.send("It's note time, sonny");
-  });
+// server.get('/', (req, res) => {
+//     res.send("It's note time, sonny");
+//   });
 
 server.post('/notes', (req, res) => {
     const {name, description} = req.body;
@@ -80,10 +80,10 @@ server.put('/notes/:id', (req, res) => {
     const { name } = req.body;
     const note = { name, id};
 
-    noteModel
+    notesModel
     .update(id, note)
     .then(editedNote => {
-        noteModel
+        notesModel
         .get(id)
         .then(foundNote => res.status(200).send(foundNote))
     })
@@ -92,12 +92,12 @@ server.put('/notes/:id', (req, res) => {
 
 server.delete('/notes/:id', (req, res) => {
     const { id } = req.params;
-    noteModel
+    notesModel
     .remove(id)
     .then(removedNote => {
         console.log(removedNote);
         res
-        .status(200).send(`Note ID ${id} has been deleted.`)
+        .status(200).send(`Note with ID ${id} has been deleted.`)
     })
     .catch(err => res.status(500).send(`There has been an error.`))
 });
