@@ -174,5 +174,5 @@ server.delete('/notes/:id', (req, res) => {
   
   const port = 9000;
   server.listen(port, function() {
-    console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
+    console.log(`\n=== Web API Listening on http://localhost:${port} ...Bring on the notes ===\n`);
   });
