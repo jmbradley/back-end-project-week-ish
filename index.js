@@ -7,10 +7,7 @@ const logger = require('morgan');
 /////Import of Models from Data Directory.....ensure correct
 ///paths here first as debugging
 
-const actionModel = require('./data/helpers/actionModel');
-
-const projectModel = require('./data/helpers/projectModel');
-
+const notesModel = require('./data/helpers/notesModel');
 
 
 const server = express();
@@ -29,78 +26,78 @@ server.use(
 //     res.send("Heyo");
 //   });
 
-server.post('/projects', (req, res) => {
+server.post('/notes', (req, res) => {
     const {name, description} = req.body;
-    const newProject = { name, description };
+    const newNote = { name, description };
     console.log(req.body);
-    projectModel
-    .insert(newProject)
-    .then(projectId => {
-        const { id } = projectId;
+    notesModel
+    .insert(newNote)
+    .then(noteId => {
+        const { id } = noteId;
         console.log("id", typeof(id));
-        projectModel
+        notesModel
         .get( id )
-        .then(project => {
-            console.log("project", project);
-            if(!project) {
+        .then(note => {
+            console.log("project", note);
+            if(!note) {
                 return res
                 .status(422)
-                .send({ Error: `ID ${id} not found`});
+                .send({ Error: `Note ID ${id} not found`});
             }
-        res.status(201).json(project);
+        res.status(201).json(note);
         });
     })
     .catch(err => console.log(err))
 });
 
-server.get('/projects', (req, res) => {
-    projectModel
+server.get('/notes', (req, res) => {
+    notesModel
     .get()
-    .then(projects => {
-        console.log(`\n** projects **`, projects);
+    .then(notes => {
+        console.log(`\n** notes **`, notes);
     res
-    .json(projects)
+    .json(notes)
     })
     .catch(err => res.send(err))
 });
 
-server.get('/projects/:id/actions', (req, res) => {
-    console.log(req.query);
-    const { id } = req.params;
+// server.get('/projects/:id/actions', (req, res) => {
+//     console.log(req.query);
+//     const { id } = req.params;
     
-    projectModel
-    .get(id)
-    .then(projects => {
-        res
-        .json(projects)
-    })
-    .catch(err => res.send(err))
-});
+//     projectModel
+//     .get(id)
+//     .then(projects => {
+//         res
+//         .json(projects)
+//     })
+//     .catch(err => res.send(err))
+// });
 
-server.put('/projects/:id', (req, res) => {
+server.put('/notes/:id', (req, res) => {
     console.log(req.query);
     const { id } = req.params;
     const { name } = req.body;
-    const project = { name, id};
+    const note = { name, id};
 
-    projectModel
-    .update(id, project)
-    .then(editedProject => {
-        projectModel
+    noteModel
+    .update(id, note)
+    .then(editedNote => {
+        noteModel
         .get(id)
-        .then(foundProject => res.status(200).send(foundProject))
+        .then(foundNote => res.status(200).send(foundNote))
     })
         .catch(err => res.status(500).send(err,"null"));
 });
 
-server.delete('/projects/:id', (req, res) => {
+server.delete('/notes/:id', (req, res) => {
     const { id } = req.params;
-    projectModel
+    noteModel
     .remove(id)
-    .then(removedProject => {
-        console.log(removedProject);
+    .then(removedNote => {
+        console.log(removedNote);
         res
-        .status(200).send(`ID ${id} has been deleted.`)
+        .status(200).send(`Note ID ${id} has been deleted.`)
     })
     .catch(err => res.status(500).send(`There has been an error.`))
 });
@@ -109,73 +106,73 @@ server.delete('/projects/:id', (req, res) => {
 
 /////////actionModel Routes///////////////
 
-server.post('/actions', (req, res) => {
-    const { project_id, description, notes } = req.body;
-    const newAction = { project_id, description, notes };
-    console.log(newAction);
-    actionModel
-    .insert(newAction)
-    .then(actionId => {
-        const { id } = actionId;
-        console.log("id", typeof(id));
-        actionModel
-        .get( id )
-        .then(action => {
-            console.log("action", action);
-            if(!action) {
-                return res
-                .status(422)
-                .send({ Error: `ID ${id} not found`});
-            }
-        res.status(201).json(action);
-        });
-    })
-    .catch(err => console.log(err))
-});
+// server.post('/actions', (req, res) => {
+//     const { project_id, description, notes } = req.body;
+//     const newAction = { project_id, description, notes };
+//     console.log(newAction);
+//     actionModel
+//     .insert(newAction)
+//     .then(actionId => {
+//         const { id } = actionId;
+//         console.log("id", typeof(id));
+//         actionModel
+//         .get( id )
+//         .then(action => {
+//             console.log("action", action);
+//             if(!action) {
+//                 return res
+//                 .status(422)
+//                 .send({ Error: `ID ${id} not found`});
+//             }
+//         res.status(201).json(action);
+//         });
+//     })
+//     .catch(err => console.log(err))
+// });
 
-server.get('/actions', (req, res) => {
-    actionModel
-    .get()
-    .then(actions => {
-        console.log(`\n** actions **`, actions);
-    res
-    .json(actions)
-    })
-    .catch(err => res.send(err))
-});
+// server.get('/actions', (req, res) => {
+//     actionModel
+//     .get()
+//     .then(actions => {
+//         console.log(`\n** actions **`, actions);
+//     res
+//     .json(actions)
+//     })
+//     .catch(err => res.send(err))
+// });
 
-server.put('/actions/:id', (req, res) => {
-    console.log(req.query);
-    const { id } = req.params;
-    const { description } = req.body;
-    const action = { description, id};
+// server.put('/actions/:id', (req, res) => {
+//     console.log(req.query);
+//     const { id } = req.params;
+//     const { description } = req.body;
+//     const action = { description, id};
 
-    actionModel
-    .update(id, action)
-    .then(editedAction => {
-        actionModel
-        .get(id)
-        .then(foundAction => res.status(200).send(foundAction))
-    })
-        .catch(err => res.status(500).send(null));
-});
+//     actionModel
+//     .update(id, action)
+//     .then(editedAction => {
+//         actionModel
+//         .get(id)
+//         .then(foundAction => res.status(200).send(foundAction))
+//     })
+//         .catch(err => res.status(500).send(null));
+// });
 
-server.delete('/actions/:id', (req, res) => {
-    const { id } = req.params;
-    actionModel
-    .remove(id)
-    .then(removedAction => {
-        console.log(removedAction);
-        res
-        .status(200).send(`ID ${id} has been deleted.`)
-    })
-    .catch(err => res.status(500).send(`Error Ya'll`))
-});
+// server.delete('/actions/:id', (req, res) => {
+//     const { id } = req.params;
+//     actionModel
+//     .remove(id)
+//     .then(removedAction => {
+//         console.log(removedAction);
+//         res
+//         .status(200).send(`ID ${id} has been deleted.`)
+//     })
+//     .catch(err => res.status(500).send(`Error Ya'll`))
+// });
   
 
 
   
-  const port = 7300;
+  const port = 9000;
   server.listen(port, function() {
     console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
   });
