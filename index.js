@@ -4,6 +4,8 @@ const helmet = require('helmet');
 
 const logger = require('morgan');
 
+const cors = require('cors');
+
 /////Import of Models from Data Directory.....ensure correct
 ///paths here first as debugging
 
@@ -17,14 +19,15 @@ const server = express();
 server.use(
     express.json(),
     logger(":method :url :status :response-time ms"),
-    helmet()
+    helmet(),
+    cors()
     );
 
 ////////////+++ProjectModel Routes++++/////////////////////////////
 
-// server.get('/', (req, res) => {
-//     res.send("It's note time, sonny");
-//   });
+server.get('/', (req, res) => {
+    res.send("It's note time, sonny");
+  });
 
 server.post('/notes', (req, res) => {
     const {name, description} = req.body;
@@ -75,10 +78,10 @@ server.get('/notes', (req, res) => {
 // });
 
 server.put('/notes/:id', (req, res) => {
-    console.log(req.query);
+    console.log(req.body);
     const { id } = req.params;
-    const { name } = req.body;
-    const note = { name, id};
+    const { name, description } = req.body;
+    const note = { id, name, description };
 
     notesModel
     .update(id, note)
@@ -87,7 +90,9 @@ server.put('/notes/:id', (req, res) => {
         .get(id)
         .then(foundNote => res.status(200).send(foundNote))
     })
-        .catch(err => res.status(500).send(err,"null"));
+        .catch(err => res.status(500).send(err));
+        // .catch(err => res.status(500).send(err, 'null'));
+       
 });
 
 server.delete('/notes/:id', (req, res) => {

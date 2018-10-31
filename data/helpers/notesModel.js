@@ -33,7 +33,7 @@ module.exports = {
       .then(([id]) => this.get(id));
   },
   update: function(id, changes) {
-    return db('note')
+    return db('notes')
       .where('id', id)
       .update(changes)
       .then(count => (count > 0 ? this.get(id) : null));
